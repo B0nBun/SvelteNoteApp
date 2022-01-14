@@ -11,7 +11,7 @@ const handleCopy = (e : MouseEvent) => navigator.clipboard.writeText(id)
 <div class='note'>
     <p on:click={handleCopy} class='muted'>{id}</p>
     <h3 class='header'>{header}</h3>
-    <p>{text}</p>
+    <p class='text'>{text}</p>
     <p on:click={handleRemove} class='muted'>Remove</p>
 </div>
 
@@ -26,6 +26,13 @@ const handleCopy = (e : MouseEvent) => navigator.clipboard.writeText(id)
         flex-direction: column;
         justify-content: space-between;
         gap: .5rem;
+    }
+
+    /* TODO: Not sure if this is the best solution for overflow, will need to think about that */
+    .text, .header {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .muted {

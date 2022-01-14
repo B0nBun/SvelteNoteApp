@@ -1,4 +1,7 @@
 <script lang='ts'>
+    // TODO: Make page for seperate note viewing (/todo.id)
+    // TODO: More styling
+    // TODO: Animations 
     import notes from "./notesStore";
     import Note from './Note.svelte'
 
@@ -10,8 +13,6 @@
     let changeText : string;
     let changeIdInput : HTMLInputElement;
     let changeTextInput : HTMLInputElement;
-    let removeId : string;
-    let removeInput : HTMLInputElement;
 
     const handleAdd = (e : MouseEvent) => {
         e.preventDefault()
@@ -31,7 +32,8 @@
     }
 </script>
 
-<div>
+<div class='wrapper'>
+    <h1 class='header'>My Notes</h1>
     <div class="notes">
         {#each $notes as note}
             <Note {...note}/>
@@ -54,6 +56,20 @@
 </div>
 
 <style>
+    .wrapper {
+        max-width: 50rem;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .header {
+        padding: .5em;
+        border-radius: 0 0 1rem 1rem;
+        margin-bottom: .5em;
+        background-color: plum;
+        color: white;
+    }
+
     .notes {
         display: flex;
         flex-direction: row;
