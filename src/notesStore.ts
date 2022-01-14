@@ -15,7 +15,7 @@ function createNotesStore() {
         set(notes)
     }
 
-    const addNote = (text: string, header?: string) => {
+    const addNote = (text: string = '', header: string = '') => {
         const newNote = {
             text,
             header,

@@ -1,52 +1,64 @@
 <script lang='ts'>
-	import notes from "./notesStore";
-	let addText : string;
-	let addInput : HTMLInputElement;
-	let changeId : string;
-	let changeText : string;
-	let changeIdInput : HTMLInputElement;
-	let changeTextInput : HTMLInputElement;
-	let removeId : string;
-	let removeInput : HTMLInputElement;
+    import notes from "./notesStore";
+    import Note from './Note.svelte'
 
-	const handleAdd = (e : MouseEvent) => {
-		e.preventDefault()
-		notes.add(addText)
-		addInput.value = ''
-	}
+    let addText : string;
+    let addHeader : string;
+    let addHeaderInput : HTMLInputElement;
+    let addTextInput : HTMLInputElement;
+    let changeId : string;
+    let changeText : string;
+    let changeIdInput : HTMLInputElement;
+    let changeTextInput : HTMLInputElement;
+    let removeId : string;
+    let removeInput : HTMLInputElement;
 
-	const handleChange = (e : MouseEvent) => {
-		e.preventDefault()
-		notes.change(changeId, changeText)
-		changeIdInput.value = ''
-		changeTextInput.value = ''
-	}
+    const handleAdd = (e : MouseEvent) => {
+        e.preventDefault()
+        if (!addText && !addHeader) return
+        notes.add(addText, addHeader)
+        addHeaderInput.value = ''
+        addTextInput.value = ''
+        addText = ''
+        addHeader = ''
+    }
 
-	const handleRemove = (e : MouseEvent) => {
-		e.preventDefault()
-		notes.remove(removeId)
-		removeInput.value = ''
-	}
-
+    const handleChange = (e : MouseEvent) => {
+        e.preventDefault()
+        notes.change(changeId, changeText)
+        changeIdInput.value = ''
+        changeTextInput.value = ''
+    }
 </script>
 
 <div>
-	<pre>
-		{JSON.stringify($notes, null, 2)}
-	</pre>
-	<form>
-		<div>
-			<input type="text" bind:this={addInput} bind:value={addText} placeholder='Add text'>
-			<button on:click={handleAdd}>Add</button>
-		</div>
-		<div>
-			<input type="string" bind:this={changeIdInput} bind:value={changeId} placeholder="Change ID">
-			<input type="text" bind:this={changeTextInput} bind:value={changeText} placeholder="Change text">
-			<button on:click={handleChange}>Change</button>
-		</div>
-		<div>
-			<input type='text' bind:this={removeInput} bind:value={removeId} placeholder="remove ID">
-			<button on:click={handleRemove}>Remove</button>
-		</div>
-	</form>
+    <div class="notes">
+        {#each $notes as note}
+            <Note {...note}/>
+        {:else}
+            <h2>No notes yet...</h2>
+        {/each}
+    </div>
+    <form>
+        <div>
+            <input type="text" bind:this={addHeaderInput} bind:value={addHeader} placeholder='Add header'>
+            <input type="text" bind:this={addTextInput} bind:value={addText} placeholder='Add text'>
+            <button on:click={handleAdd}>Add</button>
+        </div>
+        <div>
+            <input type="string" bind:this={changeIdInput} bind:value={changeId} placeholder="Change ID">
+            <input type="text" bind:this={changeTextInput} bind:value={changeText} placeholder="Change text">
+            <button on:click={handleChange}>Change</button>
+        </div>
+    </form>
 </div>
+
+<style>
+    .notes {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1em;
+        margin-bottom: 2rem;
+    }
+</style>
