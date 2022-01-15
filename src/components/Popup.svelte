@@ -1,11 +1,11 @@
 <script lang='ts'>
     import { onMount } from "svelte";
+    import notes from "../notesStore";
 
     export let x : number;
     export let y : number;
 
     let popup : HTMLDivElement;
-    let tagname : string = '';
 
     // TODO: I'm not sure that this is the best way of calculating popup position, but it will do for now
     onMount(() => {
@@ -18,16 +18,22 @@
     })
 </script>
 
-<div class='popup' bind:this={popup}>
-    <input bind:value={tagname} />
-    <button>add</button>
-    <button>remove</button>
+<div class='popup' bind:this={popup} on:click|stopPropagation>
+    <slot></slot>
 </div>
 
 <style>
     .popup {
         position: absolute;
-        padding: .2rem .5rem;
+        padding: .5rem 1rem;
         border-radius: .5rem;
+        background-color: #fff;
+        box-shadow: 0 5px 10px #aaa;
+
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        justify-content: space-around;
+        flex-wrap: wrap;
     }
 </style>

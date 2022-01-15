@@ -27,7 +27,7 @@
     <form>
         <div>
             <input placeholder="Name" bind:value={addName}/>
-            <button on:click={handleAdd}>Add</button>
+            <button class='btn' on:click={handleAdd}>Add</button>
         </div>
     </form>
 </div>

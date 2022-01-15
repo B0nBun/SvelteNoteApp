@@ -1,5 +1,6 @@
 <script lang='ts'>
     import { onMount } from "svelte/internal";
+    import { trimm } from "../utils";
     import Popup from './Popup.svelte'
     import notes from "../notesStore";
 
@@ -8,13 +9,17 @@
     // TODO: Make todos editable
     export let params;
     const noteid = params.noteid
-    const note = notes.get(noteid)
+    let note = notes.get(noteid)
 
     let isPopupOpen : boolean = false;
     let popupButton : HTMLButtonElement;
     let textarea : HTMLTextAreaElement;
     let nameInput : HTMLInputElement;
+    let tagname : string;
 
+    const closePopup = () => isPopupOpen = false
+    const openPopup = () => isPopupOpen = true
+    
     const textareaAutoResize = () => {
         textarea.style.height = 'auto'
         textarea.style.height = (textarea.scrollHeight) + 'px'
@@ -29,9 +34,21 @@
         notes.changeText(noteid, textarea.value)
     }
 
-    const closePopup = () => isPopupOpen = false
-    const openPopup = () => isPopupOpen = true
-
+    const handleTagAdd = () => {
+        tagname = trimm(tagname)
+        if (!tagname) return
+        notes.addTag(noteid, tagname)
+        note.tags = notes.get(noteid).tags
+        closePopup()
+    }
+    
+    const handleTagRemove = () => {
+        tagname = trimm(tagname)
+        if (!tagname) return
+        notes.removeTag(noteid, tagname)
+        note.tags = notes.get(noteid).tags
+        closePopup()
+    }
     
     $: console.log(isPopupOpen)
     
@@ -50,16 +67,21 @@
 <div class='wrapper'>
     <div class="note">
         <div class="header">
-            <input bind:this={nameInput} on:input={handleNameChange} value={note.name}/>
-            <button bind:this={popupButton} on:click|stopPropagation={openPopup}>...</button>
+            <input class='name' bind:this={nameInput} on:input={handleNameChange} value={note.name}/>
+            <button class='btn' bind:this={popupButton} on:click|stopPropagation={openPopup}>...</button>
         </div>
 
         {#if isPopupOpen}
-            <Popup x={popupButton.getBoundingClientRect().left} y={popupButton.getBoundingClientRect().top} />
+            <Popup x={popupButton.getBoundingClientRect().left} y={popupButton.getBoundingClientRect().top}>
+                <input placeholder='Tag' bind:value={tagname} />
+                <button on:click={handleTagAdd} class='btn'>add</button>
+                <button on:click={handleTagRemove} class='btn'>remove</button>
+            </Popup>
         {/if}
 
         <hr />
-        <textarea spellcheck={false} rows=1 on:input={handleTextChange} bind:this={textarea} value={note.text} />
+        <textarea class='text' spellcheck={false} rows=1 on:input={handleTextChange} bind:this={textarea} value={note.text} />
+        <span class='muted'>{note.tags.join('; ')}</span>
     </div>
 </div>
 
@@ -88,7 +110,7 @@
         margin-bottom: 1rem;
     }
 
-    input {
+    .name {
         font-size: 1.5rem;
         font-weight: bold;
         border: 1px solid transparent;
@@ -101,7 +123,7 @@
         }
     }
 
-    textarea {
+    .text {
         resize: none;
         overflow-y: hidden;
         font-size: 1.2rem;

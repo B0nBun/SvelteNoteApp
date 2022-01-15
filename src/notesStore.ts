@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store'
 import shortid from 'shortid'
+import { trimm } from './utils'
 import type { INote } from './Interfaces'
 
 const setLSNotes = (notes : INote[]) : void => localStorage.setItem('notes', JSON.stringify(notes)) 
@@ -62,9 +63,10 @@ function createNotesStore() {
     }
 
     const addTag = (id : string, tag : string) : void => {
+        tag = trimm(tag)
         update(notes => {
             setLSNotes(notes.map(note => {
-                if (note.id === id)
+                if (note.id === id && !note.tags.includes(tag))
                     note.tags = [...note.tags, tag]
                 return note
             }))
