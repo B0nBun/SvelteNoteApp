@@ -1,10 +1,10 @@
 <script lang='ts'>
-import { onMount } from "svelte/internal";
-import notes from "./notesStore";
+    import { onMount } from "svelte/internal";
+    import notes from "../notesStore";
 
-// TODO: This is a seperate note page
-// TODO: Add HTML for note, that doesn't exist
-// TODO: Make todos editable
+    // TODO: This is a seperate note page
+    // TODO: Add HTML for note, that doesn't exist
+    // TODO: Make todos editable
     export let params;
     const noteid = params.noteid
     const note = notes.get(noteid)
@@ -41,7 +41,7 @@ import notes from "./notesStore";
     </div>
 </div>
 
-<style>
+<style lang='scss'>
     .wrapper {
         padding-top: 1rem;
     }
@@ -72,11 +72,11 @@ import notes from "./notesStore";
         border: 1px solid transparent;
         border-radius: .2rem;
         outline: none;
-    }
 
-    input:focus {
-        border: 1px solid #aaa;
-        outline: none;
+        &:focus {
+            border: 1px solid #aaa;
+            outline: none;
+        }
     }
 
     textarea {
@@ -85,9 +85,9 @@ import notes from "./notesStore";
         font-size: 1.2rem;
         border: 1px solid #aaa;
         outline: none;
-    }
 
-    textarea:focus {
-        outline: 2px solid beige;
+        &:focus {
+            outline: 2px solid beige;
+        }
     }
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import notes from "./notesStore";
+    import notes from "../notesStore";
     import MiniNote from './MiniNote.svelte'
 
     let addName : string;
@@ -37,11 +37,12 @@
         color: white;
     }
 
+    /* TODO: This layout is too rigid, should change it */
     .notes {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 1em;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 1em;
+        justify-content: space-between;
         margin-bottom: 2rem;
     }
 </style>
