@@ -1,5 +1,6 @@
 <script lang='ts'>
     import { onMount } from "svelte/internal";
+    import Popup from './Popup.svelte'
     import notes from "../notesStore";
 
     // TODO: This is a seperate note page
@@ -9,6 +10,8 @@
     const noteid = params.noteid
     const note = notes.get(noteid)
 
+    let isPopupOpen : boolean = false;
+    let popupButton : HTMLButtonElement;
     let textarea : HTMLTextAreaElement;
     let nameInput : HTMLInputElement;
 
@@ -26,16 +29,35 @@
         notes.changeText(noteid, textarea.value)
     }
 
+    const closePopup = () => isPopupOpen = false
+    const openPopup = () => isPopupOpen = true
+
+    
+    $: console.log(isPopupOpen)
+    
     onMount(() => {
         textareaAutoResize()
+        window.addEventListener('click', closePopup)
+
+        return () => window.removeEventListener('click', closePopup)
     })
 </script>
+
+<svelte:head>
+    <title>{note.name}</title>
+</svelte:head>
 
 <div class='wrapper'>
     <div class="note">
         <div class="header">
             <input bind:this={nameInput} on:input={handleNameChange} value={note.name}/>
+            <button bind:this={popupButton} on:click|stopPropagation={openPopup}>...</button>
         </div>
+
+        {#if isPopupOpen}
+            <Popup x={popupButton.getBoundingClientRect().left} y={popupButton.getBoundingClientRect().top} />
+        {/if}
+
         <hr />
         <textarea spellcheck={false} rows=1 on:input={handleTextChange} bind:this={textarea} value={note.text} />
     </div>

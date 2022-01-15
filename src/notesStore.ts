@@ -16,7 +16,7 @@ function createNotesStore() {
 
     const {subscribe, set, update} = writable(getLSNotes())
 
-    const addNote = (text : string = '', name : string = '') : void => {
+    const add = (text : string = '', name : string = '') : void => {
         const note : INote = {
             text,
             name,
@@ -34,14 +34,14 @@ function createNotesStore() {
         })
     }
 
-    const removeNote = (id : string) : void => {
+    const remove = (id : string) : void => {
         update(notes => {
             setLSNotes(notes.filter(note => note.id !== id))
             return getLSNotes()
         })
     }
 
-    const changeNoteText = (id : string, text : string) : void => {
+    const changeText = (id : string, text : string) : void => {
         update(notes => {
             setLSNotes(notes.map(note => ({
                 ...note,
@@ -51,12 +51,34 @@ function createNotesStore() {
         })
     }
 
-    const changeNoteName = (id : string, name : string) : void => {
+    const changeName = (id : string, name : string) : void => {
         update(notes => {
             setLSNotes(notes.map(note => ({
                 ...note,
                 name: note.id === id ? name : note.text
             })))
+            return getLSNotes()
+        })
+    }
+
+    const addTag = (id : string, tag : string) : void => {
+        update(notes => {
+            setLSNotes(notes.map(note => {
+                if (note.id === id)
+                    note.tags = [...note.tags, tag]
+                return note
+            }))
+            return getLSNotes()
+        })
+    }
+
+    const removeTag = (id : string, tag : string) : void => {
+        update(notes => {
+            setLSNotes(notes.map(note => {
+                if (note.id === id)
+                    note.tags = note.tags.filter(t => t !== tag)
+                return note
+            }))
             return getLSNotes()
         })
     }
@@ -75,11 +97,13 @@ function createNotesStore() {
 
     return {
         subscribe,
-        add: addNote,
-        remove: removeNote,
-        changeName: changeNoteName,
-        changeText: changeNoteText,
-        get: get,
+        add,
+        remove,
+        changeName,
+        changeText,
+        get,
+        addTag,
+        removeTag
     }
 }
 

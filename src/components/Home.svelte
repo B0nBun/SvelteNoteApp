@@ -11,6 +11,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>My Notes</title>
+</svelte:head>
+
 <div class='wrapper'>
     <h1 class='header'>My Notes</h1>
     <div class="notes">
