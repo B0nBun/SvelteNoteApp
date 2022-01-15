@@ -1,53 +1,41 @@
 <script lang='ts'>
-import notes from './notesStore'
-export let header : string = ''
-export let text : string = ''
-export let id : string
+import notes from "./notesStore";
 
-const handleRemove = (e : MouseEvent) => notes.remove(id)
-const handleCopy = (e : MouseEvent) => navigator.clipboard.writeText(id)
+// TODO: This is a seperate note page
+// TODO: Add HTML for note, that doesn't exist
+// TODO: Make todos editable
+export let params : any = {};
+const noteid : string = params.noteid
+const note = notes.get(noteid)
 </script>
 
-<div class='note'>
-    <p on:click={handleCopy} class='muted'>{id}</p>
-    {#if header}
-        <h3 class='header'>{header}</h3>
-    {/if}
-    {#if text}
-        <p class='text'>{text}</p>
-    {/if}
-    <p on:click={handleRemove} class='muted'>Remove</p>
+<div class='wrapper'>
+    <div class="note">
+        <div class="header">
+            <h1>{note.header}</h1>
+            <div class="muted">{note.id}</div>
+        </div>
+        <hr />
+        <p>
+            {note.text}
+        </p>
+    </div>
 </div>
 
 <style>
     .note {
-        border-radius: .2rem;
-        padding: .5rem 1rem;
-        box-shadow: 0 7px 10px #aaa;
-        max-width: 25%;
         display: flex;
-        height: fit-content;
         flex-direction: column;
+        margin-top: 2rem;
+        width: 100%;
+        border-radius: .5rem;
+        padding: 1rem 2rem;
+        box-shadow: 0 7px 20px #aaa;
+    }
+
+    .header {
+        display: flex;
+        flex-direction: row;
         justify-content: space-between;
-        gap: .5rem;
-    }
-
-    /* TODO: Not sure if this is the best solution for overflow, will need to think about that */
-    .text, .header {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .muted {
-        font-size: .8rem;
-        opacity: .7;
-        cursor: pointer;
-        align-self: flex-start;
-    }
-
-    .muted:hover {
-        text-decoration: underline;
-        opacity: .9;
     }
 </style>

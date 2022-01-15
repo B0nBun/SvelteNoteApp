@@ -40,11 +40,24 @@ function createNotesStore() {
         })
     }
 
+    const get = (id : string) : INote | undefined => {
+        let resNote : INote;
+        update(notes => {
+            notes.map(note => {
+                if (note.id === id) resNote = note
+                return note
+            })
+            return notes
+        })
+        return resNote
+    }
+
     return {
         subscribe,
         add: addNote,
         remove: removeNote,
-        change: changeNote
+        change: changeNote,
+        get: get,
     }
 }
 
