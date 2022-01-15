@@ -2,60 +2,49 @@ import { writable } from 'svelte/store'
 import shortid from 'shortid'
 import type { INote } from './Interfaces'
 
-const setLSNotes = (notes : INote[]) => localStorage.setItem('notes', JSON.stringify(notes)) 
-const getLSNotes = () => JSON.parse(localStorage.getItem('notes'))
+const setLSNotes = (notes : INote[]) : void => localStorage.setItem('notes', JSON.stringify(notes)) 
+const getLSNotes = () : INote[] => JSON.parse(localStorage.getItem('notes'))
 
 function createNotesStore() {
     if (!getLSNotes()) setLSNotes([])
 
     const {subscribe, set, update} = writable(getLSNotes())
 
-    const setNotes = (notes : INote[]) => {
-        setLSNotes(notes)
-        set(notes)
-    }
-
-    const addNote = (text: string = '', header: string = '') => {
-        const newNote = {
+    const addNote = (text : string = '', header : string = '') : void => {
+        const note : INote = {
             text,
             header,
             id: shortid.generate(),
+            tags: []
         }
-        
         update(notes => {
-            const newNotes = [...notes, newNote]
-            setLSNotes(newNotes)
-            return newNotes
+            setLSNotes([...notes, note])
+            return getLSNotes()
         })
     }
 
-    const removeNote = (id : string) => {
+    const removeNote = (id : string) : void => {
         update(notes => {
-            const newNotes = notes.filter(note => note.id !== id)
-            setLSNotes(newNotes)
-            return newNotes
+            setLSNotes(notes.filter(note => note.id !== id))
+            return getLSNotes()
         })
     }
 
-    const changeNote = (id : string, newText : string) => {
+    const changeNote = (id : string, text : string) : void => {
         update(notes => {
-            const newNotes = notes.map(note => {
-                if (note.id !== id) return note
-                note.text = newText
-                return note
-            })
-            console.log(newNotes)
-            setLSNotes(newNotes)
-            return newNotes
+            setLSNotes(notes.map(note => ({
+                ...note,
+                text: note.id === id ? text : note.text
+            })))
+            return getLSNotes()
         })
     }
 
     return {
         subscribe,
-        set : setNotes,
-        add : addNote,
-        remove : removeNote,
-        change : changeNote
+        add: addNote,
+        remove: removeNote,
+        change: changeNote
     }
 }
 

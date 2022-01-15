@@ -1,7 +1,10 @@
 <script lang='ts'>
-    // TODO: Make page for seperate note viewing (/todo.id)
+    // TODO: Implement pages for seperate note viewing (/todo.id)
+    // TODO: Implement tag system
     // TODO: More styling
     // TODO: Animations 
+    // TODO: Markdown styling inside the notes
+    //       ** <b>; __ <i>; ~~ <linethrough>; # headers; ===== line; [text](href) <a>;   
     import notes from "./notesStore";
     import Note from './Note.svelte'
 

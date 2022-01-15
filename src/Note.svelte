@@ -10,8 +10,12 @@ const handleCopy = (e : MouseEvent) => navigator.clipboard.writeText(id)
 
 <div class='note'>
     <p on:click={handleCopy} class='muted'>{id}</p>
-    <h3 class='header'>{header}</h3>
-    <p class='text'>{text}</p>
+    {#if header}
+        <h3 class='header'>{header}</h3>
+    {/if}
+    {#if text}
+        <p class='text'>{text}</p>
+    {/if}
     <p on:click={handleRemove} class='muted'>Remove</p>
 </div>
 
@@ -20,7 +24,7 @@ const handleCopy = (e : MouseEvent) => navigator.clipboard.writeText(id)
         border-radius: .2rem;
         padding: .5rem 1rem;
         box-shadow: 0 7px 10px #aaa;
-        max-width: 300px;
+        max-width: 25%;
         display: flex;
         height: fit-content;
         flex-direction: column;
