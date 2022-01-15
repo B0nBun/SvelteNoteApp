@@ -2,30 +2,12 @@
     import notes from "./notesStore";
     import MiniNote from './MiniNote.svelte'
 
-    let addText : string;
-    let addHeader : string;
-    let addHeaderInput : HTMLInputElement;
-    let addTextInput : HTMLInputElement;
-    let changeId : string;
-    let changeText : string;
-    let changeIdInput : HTMLInputElement;
-    let changeTextInput : HTMLInputElement;
-
+    let addName : string;
+    
     const handleAdd = (e : MouseEvent) => {
         e.preventDefault()
-        if (!addText && !addHeader) return
-        notes.add(addText, addHeader)
-        addHeaderInput.value = ''
-        addTextInput.value = ''
-        addText = ''
-        addHeader = ''
-    }
-
-    const handleChange = (e : MouseEvent) => {
-        e.preventDefault()
-        notes.change(changeId, changeText)
-        changeIdInput.value = ''
-        changeTextInput.value = ''
+        notes.add('', addName)
+        addName = ''
     }
 </script>
 
@@ -40,14 +22,8 @@
     </div>
     <form>
         <div>
-            <input type="text" bind:this={addHeaderInput} bind:value={addHeader} placeholder='Add header'>
-            <input type="text" bind:this={addTextInput} bind:value={addText} placeholder='Add text'>
+            <input placeholder="Name" bind:value={addName}/>
             <button on:click={handleAdd}>Add</button>
-        </div>
-        <div>
-            <input type="string" bind:this={changeIdInput} bind:value={changeId} placeholder="Change ID">
-            <input type="text" bind:this={changeTextInput} bind:value={changeText} placeholder="Change text">
-            <button on:click={handleChange}>Change</button>
         </div>
     </form>
 </div>

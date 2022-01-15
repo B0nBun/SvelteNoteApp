@@ -1,6 +1,8 @@
 <script lang='ts'>
+import Note from './Note.svelte';
+
     import notes from './notesStore'
-    export let header : string = ''
+    export let name : string = ''
     export let text : string = ''
     export let id : string
     
@@ -9,9 +11,7 @@
 
 <div class='note'>
     <a href={`/#/${id}`} class='muted'>{id}</a>
-    {#if header}
-        <h3 class='header'>{header}</h3>
-    {/if}
+    <h3 class='name'>{name}</h3>
     {#if text}
         <p class='text'>{text}</p>
     {/if}
@@ -32,7 +32,7 @@
     }
 
     /* TODO: Not sure if this is the best solution for overflow, will need to think about that */
-    .text, .header {
+    .text, .name {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

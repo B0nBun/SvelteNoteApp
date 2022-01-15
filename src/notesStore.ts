@@ -6,17 +6,28 @@ const setLSNotes = (notes : INote[]) : void => localStorage.setItem('notes', JSO
 const getLSNotes = () : INote[] => JSON.parse(localStorage.getItem('notes'))
 
 function createNotesStore() {
-    if (!getLSNotes()) setLSNotes([])
+    // TODO: Remove this test note, when the development is finished
+    if (!getLSNotes()) setLSNotes([{
+        id: "test",
+        text: "This is a test note",
+        name: "Note Name",
+        tags: []
+    }])
 
     const {subscribe, set, update} = writable(getLSNotes())
 
-    const addNote = (text : string = '', header : string = '') : void => {
+    const addNote = (text : string = '', name : string = '') : void => {
         const note : INote = {
             text,
-            header,
+            name,
             id: shortid.generate(),
             tags: []
         }
+
+        if (!name) {
+            note.name = `Note ${note.id}`
+        }
+
         update(notes => {
             setLSNotes([...notes, note])
             return getLSNotes()
@@ -30,11 +41,21 @@ function createNotesStore() {
         })
     }
 
-    const changeNote = (id : string, text : string) : void => {
+    const changeNoteText = (id : string, text : string) : void => {
         update(notes => {
             setLSNotes(notes.map(note => ({
                 ...note,
                 text: note.id === id ? text : note.text
+            })))
+            return getLSNotes()
+        })
+    }
+
+    const changeNoteName = (id : string, name : string) : void => {
+        update(notes => {
+            setLSNotes(notes.map(note => ({
+                ...note,
+                name: note.id === id ? name : note.text
             })))
             return getLSNotes()
         })
@@ -56,7 +77,8 @@ function createNotesStore() {
         subscribe,
         add: addNote,
         remove: removeNote,
-        change: changeNote,
+        changeName: changeNoteName,
+        changeText: changeNoteText,
         get: get,
     }
 }
