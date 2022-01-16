@@ -2,7 +2,7 @@
     import { onMount } from "svelte/internal";
     import { trimm } from "../utils";
     import Popup from './Popup.svelte'
-    import notes from "../notesStore";
+    import notes, { allTags } from "../notesStore";
 
     // TODO: This is a seperate note page
     // TODO: Add HTML for note, that doesn't exist
@@ -40,6 +40,7 @@
         notes.addTag(noteid, tagname)
         note.tags = notes.get(noteid).tags
         closePopup()
+        console.log($allTags)
     }
     
     const handleTagRemove = () => {
@@ -48,9 +49,8 @@
         notes.removeTag(noteid, tagname)
         note.tags = notes.get(noteid).tags
         closePopup()
+        console.log($allTags)
     }
-    
-    $: console.log(isPopupOpen)
     
     onMount(() => {
         textareaAutoResize()

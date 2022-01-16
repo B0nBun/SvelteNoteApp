@@ -1,14 +1,17 @@
 <script lang="ts">
-    import notes from "../notesStore";
+    import notes, { allTags } from "../notesStore";
     import MiniNote from './MiniNote.svelte'
 
     let addName : string;
+    let includeTags : string[];
+    let excludeTags : string[];
     
     const handleAdd = (e : MouseEvent) => {
         e.preventDefault()
         notes.add('', addName)
         addName = ''
     }
+    // TODO: Implement filtering through tags
 </script>
 
 <svelte:head>

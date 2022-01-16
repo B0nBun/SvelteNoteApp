@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
+import { derived, writable } from 'svelte/store'
 import shortid from 'shortid'
 import { trimm } from './utils'
 import type { INote } from './Interfaces'
@@ -110,4 +110,13 @@ function createNotesStore() {
 }
 
 const notes = createNotesStore()
+
+export const allTags = derived(
+    notes,
+    $notes => $notes.reduce(
+        (curTags, note) => [...curTags, ...note.tags.filter(tag => !curTags.includes(tag))].sort(),
+        []
+    )
+)
+
 export default notes

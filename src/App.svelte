@@ -1,4 +1,6 @@
 <script lang='ts'>
+    // DONE: Seperate note viewing
+    // DONE: Note editing
     // TODO: Implement tag system
     // TODO: More styling
     // TODO: Animations 
