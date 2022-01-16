@@ -6,7 +6,6 @@
 
     // TODO: This is a seperate note page
     // TODO: Add HTML for note, that doesn't exist
-    // TODO: Make todos editable
     export let params;
     const noteid = params.noteid
     let note = notes.get(noteid)
@@ -16,6 +15,8 @@
     let textarea : HTMLTextAreaElement;
     let nameInput : HTMLInputElement;
     let tagname : string;
+    let tagSpaceError : boolean = false;
+    let tagDashError : boolean = false;
 
     const closePopup = () => isPopupOpen = false
     const openPopup = () => isPopupOpen = true
@@ -37,10 +38,21 @@
     const handleTagAdd = () => {
         tagname = trimm(tagname)
         if (!tagname) return
+        if (tagname.match(/ /)) {
+            tagDashError = false
+            tagSpaceError = true
+            return
+        }
+        if (tagname.match(/^-/)) {
+            tagSpaceError = false
+            tagDashError = true
+            return
+        }
         notes.addTag(noteid, tagname)
         note.tags = notes.get(noteid).tags
-        closePopup()
-        console.log($allTags)
+        tagSpaceError = false
+        tagDashError = false
+        tagname = ''
     }
     
     const handleTagRemove = () => {
@@ -48,8 +60,9 @@
         if (!tagname) return
         notes.removeTag(noteid, tagname)
         note.tags = notes.get(noteid).tags
-        closePopup()
-        console.log($allTags)
+        tagSpaceError = false
+        tagDashError = false
+        tagname = ''
     }
     
     onMount(() => {
@@ -73,6 +86,12 @@
 
         {#if isPopupOpen}
             <Popup x={popupButton.getBoundingClientRect().left} y={popupButton.getBoundingClientRect().top}>
+                {#if tagDashError}
+                    <p style='color: red'>Tagname shouldn't start with dash</p>
+                {/if}
+                {#if tagSpaceError}
+                    <p style='color:red'>Tagname shouldn't have spaces in it</p>
+                {/if}
                 <input placeholder='Tag' bind:value={tagname} />
                 <button on:click={handleTagAdd} class='btn'>add</button>
                 <button on:click={handleTagRemove} class='btn'>remove</button>

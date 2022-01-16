@@ -1,7 +1,9 @@
 <script lang='ts'>
     // DONE: Seperate note viewing
     // DONE: Note editing
+
     // TODO: Implement tag system
+        // TODO: Implement adding multiple tags in one time (e.g. 'imp. shop new' => ['imp.', 'shop', 'new'])
     // TODO: More styling
     // TODO: Animations 
     // TODO: Markdown styling inside the notes

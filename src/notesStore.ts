@@ -30,7 +30,7 @@ function createNotesStore() {
         }
 
         update(notes => {
-            setLSNotes([...notes, note])
+            setLSNotes([note, ...notes])
             return getLSNotes()
         })
     }
