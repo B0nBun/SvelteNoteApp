@@ -3,7 +3,7 @@
     // DONE: Note editing
 
     // TODO: Implement tag system
-        // TODO: Implement adding multiple tags in one time (e.g. 'imp. shop new' => ['imp.', 'shop', 'new'])
+        // TODO: Improve popups 
     // TODO: More styling
     // TODO: Animations 
     // TODO: Markdown styling inside the notes

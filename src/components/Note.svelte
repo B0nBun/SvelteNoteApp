@@ -14,7 +14,7 @@
     let popupButton : HTMLButtonElement;
     let textarea : HTMLTextAreaElement;
     let nameInput : HTMLInputElement;
-    let tagname : string;
+    let tagnames : string;
     let tagSpaceError : boolean = false;
     let tagDashError : boolean = false;
 
@@ -36,33 +36,32 @@
     }
 
     const handleTagAdd = () => {
-        tagname = trimm(tagname)
-        if (!tagname) return
-        if (tagname.match(/ /)) {
-            tagDashError = false
-            tagSpaceError = true
-            return
-        }
-        if (tagname.match(/^-/)) {
-            tagSpaceError = false
+        tagnames = trimm(tagnames)
+        if (!tagnames) return
+        let tags = tagnames.split(/ +/)
+        if (tags.some(tag => tag.match(/^-/))) {
             tagDashError = true
             return
         }
-        notes.addTag(noteid, tagname)
+
+        tags.map(tag => {
+            notes.addTag(noteid, tag)
+        })
         note.tags = notes.get(noteid).tags
-        tagSpaceError = false
         tagDashError = false
-        tagname = ''
+        tagnames = ''
     }
     
     const handleTagRemove = () => {
-        tagname = trimm(tagname)
-        if (!tagname) return
-        notes.removeTag(noteid, tagname)
+        tagnames = trimm(tagnames)
+        if (!tagnames) return
+        let tags = tagnames.split(/ +/)
+        tags.map(tag => {
+            notes.removeTag(noteid, tag)
+        })
         note.tags = notes.get(noteid).tags
-        tagSpaceError = false
         tagDashError = false
-        tagname = ''
+        tagnames = ''
     }
     
     onMount(() => {
@@ -92,7 +91,7 @@
                 {#if tagSpaceError}
                     <p style='color:red'>Tagname shouldn't have spaces in it</p>
                 {/if}
-                <input placeholder='Tag' bind:value={tagname} />
+                <input placeholder='Tag' bind:value={tagnames} />
                 <button on:click={handleTagAdd} class='btn'>add</button>
                 <button on:click={handleTagRemove} class='btn'>remove</button>
             </Popup>
