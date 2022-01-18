@@ -31,15 +31,12 @@
         let excluded = tags.filter(tag => tag[0] === '-').map(tag => tag.slice(1))
         let included = tags.filter(tag => tag[0] !== '-')
         filteredNotes = $notes.filter(note => {
-            if (excluded.length > 0 && note.tags.some(tag => excluded.includes(tag))) {
+            if (excluded.length > 0 && excluded.some(tag => note.tags.includes(tag)))
                 return false
-            }
-            if (included.length > 0 && !note.tags.some(tag => included.includes(tag))) {
+            if (included.length > 0 && !included.every(tag => note.tags.includes(tag)))
                 return false
-            }
             return true
         })
-        console.log(filteredNotes)
     }
 
     onMount(() => {
