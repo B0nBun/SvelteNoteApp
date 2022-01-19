@@ -8,6 +8,7 @@
     export let params : {noteid: string};
     const noteid = params.noteid
     let note = notes.get(noteid)
+    let noteStates : string[] = []
 
     let textarea : HTMLTextAreaElement;
     let nameInput : HTMLInputElement;
@@ -23,9 +24,22 @@
         notes.changeName(noteid, nameInput.value)
     }
 
-    const handleTextChange = () : void => {
+    const handleInput = () : void => {
         textareaAutoResize()
         notes.changeText(noteid, textarea.value)
+    }
+
+    const handleTextareaKeydown = (e : KeyboardEvent) : void => {
+        // TODO: Should think about how to implement Ctrl+Z in a better way
+        if (['Enter', 'Escape', ' ', 'Tab'].includes(e.key)) {
+            noteStates.push(note.text)
+        }
+
+        if (e.key === 'z' && e.ctrlKey) {
+            note.text = noteStates.pop() || note.text
+            notes.changeText(noteid, textarea.value)
+            textareaAutoResize()
+        }
     }
 
     const handleTagAdd = () : void => {
@@ -57,7 +71,7 @@
         tagnames = ''
     }
     
-    const handleKeydown = (e : KeyboardEvent) : void => {
+    const handleEscape = (e : KeyboardEvent) : void => {
         if (e.key === 'Escape') {
             if (textarea === document.activeElement) {
                 textarea.blur()
@@ -66,13 +80,13 @@
             window.location.replace('/#/')
         }
     }
-    
+
     onMount(() => {
         textareaAutoResize()
 
-        window.addEventListener('keydown', handleKeydown)
+        window.addEventListener('keydown', handleEscape)
         
-        return () => window.removeEventListener('keydown', handleKeydown)
+        return () => window.removeEventListener('keydown', handleEscape)
     })
 </script>
 
@@ -94,7 +108,7 @@
             </form>
         </div>
         <hr />
-        <textarea class='text' spellcheck={false} rows=1 on:input={handleTextChange} bind:this={textarea} value={note.text} />
+        <textarea class='text' spellcheck={false} rows=1 on:keydown={handleTextareaKeydown} on:input={handleInput} bind:this={textarea} bind:value={note.text} />
         <span class='muted'>{note.tags.join('; ')}</span>
     </div>
 </div>

@@ -3,7 +3,7 @@
     // DONE: Note editing
     // DONE: Implement tag system
 
-    // TODO: Ctrl+Z for note editing
+    // TODO: Refactor code and make it prettier
     // TODO: Markdown styling inside the notes
     //       ** <b>; __ <i>; ~~ <linethrough>; # headers; ===== line; [text](href) <a>;   
     // TODO: More styling
