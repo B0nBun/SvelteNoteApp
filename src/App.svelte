@@ -6,6 +6,7 @@
         // TODO: Improve popups (Maybe change them to modals, or just regular elements, that are hidden until needed)
     // TODO: More styling
         // TODO: Colors and general styling can be taken from Svelte
+        // TODO: Make site more adaptive
         // TODO: Add icons
     // TODO: Animations 
     // TODO: Add some hotkeys for going back, clearing filtering etc.
@@ -15,8 +16,6 @@
     import Router from 'svelte-spa-router'
     import Note from './components/Note.svelte'
     import Home from './components/Home.svelte'
-import type { SvelteComponent } from 'svelte';
-import type { binding_callbacks, is_crossorigin } from 'svelte/internal';
 </script>
 
 <Router routes={{

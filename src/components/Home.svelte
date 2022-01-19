@@ -3,11 +3,8 @@
     import type { INote } from "../Interfaces";
     import notes, { allTags } from "../notesStore";
     import MiniNote from './MiniNote.svelte'
-    import Popup from './Popup.svelte'
 
     let addName : string;
-    let isFilterOpen : boolean = false;
-    let filterButton : HTMLButtonElement;
     let filtertags : string;
     let filteredNotes : INote[] = $notes;
     
@@ -16,9 +13,6 @@
         notes.add('', addName)
         addName = ''
     }
-
-    const openFilter = () => isFilterOpen = true
-    const closeFilter = () => isFilterOpen = false
 
     const filterOut = () : void => {
         if (!filtertags) {
@@ -40,12 +34,9 @@
     }
 
     onMount(() => {
-        window.addEventListener('click', closeFilter)
         notes.subscribe(arr => {
             filterOut()
         })
-
-        return () => window.removeEventListener('click', closeFilter)
     })
     // TODO: Implement filtering through tags
 </script>
@@ -57,13 +48,10 @@
 <div class='wrapper'>
     <div class='header'>
         <h1>My Notes</h1>
-        <button bind:this={filterButton} on:click|stopPropagation={openFilter}>Filter</button>
-        {#if isFilterOpen}
-            <Popup x={filterButton.getBoundingClientRect().left} y={filterButton.getBoundingClientRect().top}>
-                <input type="text" bind:value={filtertags}/>
-                <button on:click={filterOut}>filter</button>
-            </Popup>
-        {/if}
+        <div>
+            <input type="text" bind:value={filtertags}/>
+            <button on:click={filterOut}>filter</button>
+        </div>
     </div>
     <form>
         <div>

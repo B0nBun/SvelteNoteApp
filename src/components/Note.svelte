@@ -1,7 +1,6 @@
 <script lang='ts'>
     import { onMount } from "svelte/internal";
     import { trimm } from "../utils";
-    import Popup from './Popup.svelte'
     import notes, { allTags } from "../notesStore";
 
     // TODO: This is a seperate note page
@@ -10,16 +9,10 @@
     const noteid = params.noteid
     let note = notes.get(noteid)
 
-    let isPopupOpen : boolean = false;
-    let popupButton : HTMLButtonElement;
     let textarea : HTMLTextAreaElement;
     let nameInput : HTMLInputElement;
     let tagnames : string;
-    let tagSpaceError : boolean = false;
     let tagDashError : boolean = false;
-
-    const closePopup = () => isPopupOpen = false
-    const openPopup = () => isPopupOpen = true
     
     const textareaAutoResize = () => {
         textarea.style.height = 'auto'
@@ -66,9 +59,6 @@
     
     onMount(() => {
         textareaAutoResize()
-        window.addEventListener('click', closePopup)
-
-        return () => window.removeEventListener('click', closePopup)
     })
 </script>
 
@@ -80,23 +70,15 @@
     <div class="note">
         <div class="header">
             <input class='name' bind:this={nameInput} on:input={handleNameChange} value={note.name}/>
-            <button class='btn' bind:this={popupButton} on:click|stopPropagation={openPopup}>...</button>
-        </div>
-
-        {#if isPopupOpen}
-            <Popup x={popupButton.getBoundingClientRect().left} y={popupButton.getBoundingClientRect().top}>
+            <div class='tag-box'>
                 {#if tagDashError}
                     <p style='color: red'>Tagname shouldn't start with dash</p>
-                {/if}
-                {#if tagSpaceError}
-                    <p style='color:red'>Tagname shouldn't have spaces in it</p>
                 {/if}
                 <input placeholder='Tag' bind:value={tagnames} />
                 <button on:click={handleTagAdd} class='btn'>add</button>
                 <button on:click={handleTagRemove} class='btn'>remove</button>
-            </Popup>
-        {/if}
-
+            </div>
+        </div>
         <hr />
         <textarea class='text' spellcheck={false} rows=1 on:input={handleTextChange} bind:this={textarea} value={note.text} />
         <span class='muted'>{note.tags.join('; ')}</span>
@@ -124,10 +106,6 @@
         justify-content: space-between;
     }
 
-    hr {
-        margin-bottom: 1rem;
-    }
-
     .name {
         font-size: 1.5rem;
         font-weight: bold;
@@ -139,6 +117,16 @@
             border: 1px solid #aaa;
             outline: none;
         }
+    }
+
+    .tag-box {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    hr {
+        margin-bottom: 1rem;
     }
 
     .text {
