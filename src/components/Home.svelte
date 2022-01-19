@@ -33,12 +33,20 @@
         })
     }
 
-    onMount(() => {
-        notes.subscribe(arr => {
+    const handleKeydown = (e : KeyboardEvent) : void => {
+        if (e.key === 'Escape') {
+            filtertags = ''
             filterOut()
-        })
+        }
+    }
+
+    onMount(() => {
+        notes.subscribe(filterOut)
+
+        window.addEventListener('keydown', handleKeydown)
+
+        return () => window.removeEventListener('keydown', handleKeydown)
     })
-    // TODO: Implement filtering through tags
 </script>
 
 <svelte:head>
@@ -48,22 +56,22 @@
 <div class='wrapper'>
     <div class='header'>
         <h1>My Notes</h1>
-        <div>
+        <form>
             <input type="text" bind:value={filtertags}/>
-            <button on:click={filterOut}>filter</button>
-        </div>
+            <button on:click|preventDefault={filterOut}>filter</button>
+        </form>
     </div>
     <form>
-        <div>
+        <form>
             <input placeholder="Name" bind:value={addName}/>
-            <button class='btn' on:click={handleAdd}>Add</button>
-        </div>
+            <button class='btn' on:click|preventDefault={handleAdd}>Add</button>
+        </form>
     </form>
     <div class="notes">
         {#each filteredNotes as note}
             <MiniNote {...note}/>
         {:else}
-            <h2>No notes yet...</h2>
+            <h2>No notes...</h2>
         {/each}
     </div>
 </div>

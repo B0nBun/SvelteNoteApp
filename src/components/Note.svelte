@@ -1,11 +1,11 @@
 <script lang='ts'>
     import { onMount } from "svelte/internal";
     import { trimm } from "../utils";
-    import notes, { allTags } from "../notesStore";
+    import notes from "../notesStore";
 
     // TODO: This is a seperate note page
     // TODO: Add HTML for note, that doesn't exist
-    export let params;
+    export let params : {noteid: string};
     const noteid = params.noteid
     let note = notes.get(noteid)
 
@@ -14,23 +14,23 @@
     let tagnames : string;
     let tagDashError : boolean = false;
     
-    const textareaAutoResize = () => {
+    const textareaAutoResize = () : void => {
         textarea.style.height = 'auto'
         textarea.style.height = (textarea.scrollHeight) + 'px'
     }
 
-    const handleNameChange = () => {
+    const handleNameChange = () : void => {
         notes.changeName(noteid, nameInput.value)
     }
 
-    const handleTextChange = () => {
+    const handleTextChange = () : void => {
         textareaAutoResize()
         notes.changeText(noteid, textarea.value)
     }
 
-    const handleTagAdd = () => {
-        tagnames = trimm(tagnames)
+    const handleTagAdd = () : void => {
         if (!tagnames) return
+        tagnames = trimm(tagnames)
         let tags = tagnames.split(/ +/)
         if (tags.some(tag => tag.match(/^-/))) {
             tagDashError = true
@@ -45,9 +45,9 @@
         tagnames = ''
     }
     
-    const handleTagRemove = () => {
-        tagnames = trimm(tagnames)
+    const handleTagRemove = () : void => {
         if (!tagnames) return
+        tagnames = trimm(tagnames)
         let tags = tagnames.split(/ +/)
         tags.map(tag => {
             notes.removeTag(noteid, tag)
@@ -57,8 +57,22 @@
         tagnames = ''
     }
     
+    const handleKeydown = (e : KeyboardEvent) : void => {
+        if (e.key === 'Escape') {
+            if (textarea === document.activeElement) {
+                textarea.blur()
+                return
+            }
+            window.location.replace('/#/')
+        }
+    }
+    
     onMount(() => {
         textareaAutoResize()
+
+        window.addEventListener('keydown', handleKeydown)
+        
+        return () => window.removeEventListener('keydown', handleKeydown)
     })
 </script>
 
@@ -70,14 +84,14 @@
     <div class="note">
         <div class="header">
             <input class='name' bind:this={nameInput} on:input={handleNameChange} value={note.name}/>
-            <div class='tag-box'>
+            <form class='tag-box'>
                 {#if tagDashError}
                     <p style='color: red'>Tagname shouldn't start with dash</p>
                 {/if}
                 <input placeholder='Tag' bind:value={tagnames} />
-                <button on:click={handleTagAdd} class='btn'>add</button>
-                <button on:click={handleTagRemove} class='btn'>remove</button>
-            </div>
+                <button on:click|preventDefault={handleTagAdd} class='btn'>add</button>
+                <button on:click|preventDefault={handleTagRemove} class='btn'>remove</button>
+            </form>
         </div>
         <hr />
         <textarea class='text' spellcheck={false} rows=1 on:input={handleTextChange} bind:this={textarea} value={note.text} />
