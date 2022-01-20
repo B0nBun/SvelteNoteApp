@@ -1,7 +1,7 @@
 <script lang='ts'>
     import type { INote } from '../Interfaces'
     import { onMount } from "svelte/internal";
-    import { trimm } from "../utils";
+    import { parseTextToMarkdown, sanitize, trimm } from "../utils";
     import notes from "../notesStore";
 
     export let params : {noteid: string};
@@ -26,10 +26,12 @@
     const handleInput = () : void => {
         textareaAutoResize()
         notes.changeText(noteid, noteArea.value)
+        // console.log(parseTextToMarkdown(sanitize(note.text)))
     }
 
     const handleTextareaKeydown = (e : KeyboardEvent) : void => {
         // TODO: Should think about how to implement Ctrl+Z in a better way
+        // TODO: Also fix the jumping to end cursor
         if (['Enter', 'Escape', ' ', 'Tab'].includes(e.key)) {
             noteStates.push(note.text)
         }

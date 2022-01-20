@@ -5,3 +5,9 @@ export interface INote {
     name: string,
     text: string,
 }
+
+export interface IMarkdownSyntax {
+    start: string,
+    end: string,
+    class: string,
+}

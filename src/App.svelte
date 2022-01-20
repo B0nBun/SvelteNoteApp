@@ -4,7 +4,7 @@
     // DONE: Implement tag system
 
     // TODO: Markdown styling inside the notes
-    //       ** <b>; __ <i>; ~~ <linethrough>; # headers; ===== line; [text](href) <a>;   
+    //       ** <b>; __ <i>; ~~ <linethrough>; # headers;
     // TODO: More styling
         // TODO: Colors and general styling can be taken from Svelte
         // TODO: Make site more adaptive
