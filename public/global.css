@@ -91,3 +91,29 @@ button:focus {
 	border-radius: .5rem;
 	margin: 0;
 }
+
+.bold {
+	font-weight: bolder;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.linethrough {
+	text-decoration: line-through;
+}
+
+.monospace {
+	font-family: monospace;
+}
+
+.header1 {
+	font-size: 1.4em;
+}
+.header2 {
+	font-size: 1.25em;
+}
+.header3 {
+	font-size: 1.15em;
+}

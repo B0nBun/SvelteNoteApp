@@ -4,7 +4,9 @@
     // DONE: Implement tag system
 
     // TODO: Markdown styling inside the notes
-    //       ** <b>; __ <i>; ~~ <linethrough>; # headers;
+        // TODO: anchors/hyperlinks
+        // TODO: Add QOL changes like auto brakcets and quotes
+        // TODO: Highlighting
     // TODO: More styling
         // TODO: Colors and general styling can be taken from Svelte
         // TODO: Make site more adaptive

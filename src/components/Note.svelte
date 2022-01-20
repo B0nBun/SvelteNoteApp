@@ -116,11 +116,18 @@
             bind:this={noteArea}
             bind:value={note.text}
         />
+        <pre class='text'>
+            {@html parseTextToMarkdown(sanitize(note.text))}
+        </pre>
         <span class='muted'>{note.tags.join('; ')}</span>
     </div>
 </div>
 
 <style lang='scss'>
+    pre {
+        font-family: sans-serif;
+    }
+    
     .wrapper {
         padding-top: 1rem;
     }

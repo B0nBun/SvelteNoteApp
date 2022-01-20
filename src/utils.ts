@@ -5,47 +5,58 @@ export const trimm = (str : string) : string => str.replace(/^ +/, '').replace(/
 export const parseTextToMarkdown = (text: string) : string => {
     let syntax : IMarkdownSyntax[] = [
         {
-            start: '\\*\\*',
-            end: '\\*\\*',
+            start: '\\*',
+            end: '\\*',
             class: 'bold'
         },
         {
-            start: '__',
-            end: '__',
+            start: '_',
+            end: '_',
             class: 'italic'
         },
         {
-            start: '~~',
-            end: '~~',
+            start: '~',
+            end: '~',
             class: 'linethrough'
         },
         {
-            start: '^###',
-            end: '(\\n|$)',
-            class: 'header3'
+            start: '`',
+            end: '`',
+            class: 'monospace'
         },
         {
-            start: '^##',
+            start: '\\n# ',
+            end: '(\\n|$)',
+            class: 'header1'
+        },
+        {
+            start: '\\n## ',
             end: '(\\n|$)',
             class: 'header2'
         },
         {
-            start: '^#',
+            start: '\\n### ',
             end: '(\\n|$)',
-            class: 'header1'
+            class: 'header3'
         },
+        // {
+        //     start: ':',
+        //     end: ':',
+        //     class: 'muted',
+        // }
     ]
 
+    console.log(JSON.stringify(text))
     syntax.forEach(elem => {
         text = text.replace(RegExp(`${elem.start}.+?${elem.end}`, 'g'), (part:string) : string => {
-            let start = elem.start.replace(/\\/g, '')
-            let end = elem.end.replace(/\\/g, '')
             if (['header1', 'header2', 'header3'].includes(elem.class)) {
-                return `<span class='${elem.class}'>` + part.substring(start.length - 1, part.length).replace('\n', '') + `</span>\n`
+                let newlinescount = (part.match(/\n/g) || []).length
+                return `\n<span class='${elem.class}'>` + part.substring(1).replace(/\n/, '') + `</span>` + (newlinescount ? '\n' : '')
             }
-            return `<span class='${elem.class}'>` + part.substring(start.length, part.length - end.length) + `</span>`
+            return `<span class='${elem.class}'>` + part + `</span>`
         })
     })
+    console.log(JSON.stringify(text))
     return text
 }
 
