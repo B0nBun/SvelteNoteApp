@@ -1,30 +1,29 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import type { INote } from "../Interfaces";
-    import notes, { allTags } from "../notesStore";
+    import notes from "../notesStore";
     import MiniNote from './MiniNote.svelte'
 
     let addName : string;
-    let filtertags : string;
+    let filterStr : string;
     let filteredNotes : INote[] = $notes;
     
-    const handleAdd = (e : MouseEvent) => {
-        e.preventDefault()
+    const handleAdd = (e : MouseEvent) : void => {
         notes.add('', addName)
         addName = ''
     }
 
     const filterOut = () : void => {
-        if (!filtertags) {
+        if (!filterStr) {
             filteredNotes = $notes
             return
         }
 
         // Filter function is to avoid empty strings e.g. '   filter tags ' => ['filter', 'tags', '']
-        let tags : string[] = filtertags.split(/ +/).filter(tag => tag)
-        let excluded = tags.filter(tag => tag[0] === '-').map(tag => tag.slice(1))
-        let included = tags.filter(tag => tag[0] !== '-')
-        filteredNotes = $notes.filter(note => {
+        let filterTags : string[] = filterStr.split(/ +/).filter(tag => tag)
+        let excluded : string[] = filterTags.filter(tag => tag[0] === '-').map(tag => tag.slice(1))
+        let included : string[] = filterTags.filter(tag => tag[0] !== '-')
+        filteredNotes = $notes.filter((note : INote) => {
             if (excluded.length > 0 && excluded.some(tag => note.tags.includes(tag)))
                 return false
             if (included.length > 0 && !included.every(tag => note.tags.includes(tag)))
@@ -33,19 +32,18 @@
         })
     }
 
-    const handleKeydown = (e : KeyboardEvent) : void => {
+    const handleEscape = (e : KeyboardEvent) : void => {
         if (e.key === 'Escape') {
-            filtertags = ''
+            filterStr = ''
             filterOut()
         }
     }
 
-    onMount(() => {
+    onMount(() : () => void => {
         notes.subscribe(filterOut)
+        window.addEventListener('keydown', handleEscape)
 
-        window.addEventListener('keydown', handleKeydown)
-
-        return () => window.removeEventListener('keydown', handleKeydown)
+        return () => window.removeEventListener('keydown', handleEscape)
     })
 </script>
 
@@ -57,7 +55,7 @@
     <div class='header'>
         <h1>My Notes</h1>
         <form>
-            <input type="text" bind:value={filtertags}/>
+            <input type="text" bind:value={filterStr}/>
             <button on:click|preventDefault={filterOut}>filter</button>
         </form>
     </div>

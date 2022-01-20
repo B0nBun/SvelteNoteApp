@@ -1,23 +1,22 @@
 <script lang='ts'>
+    import type { INote } from '../Interfaces'
     import { onMount } from "svelte/internal";
     import { trimm } from "../utils";
     import notes from "../notesStore";
 
-    // TODO: This is a seperate note page
-    // TODO: Add HTML for note, that doesn't exist
     export let params : {noteid: string};
     const noteid = params.noteid
-    let note = notes.get(noteid)
+    
+    let note : INote = notes.get(noteid)
     let noteStates : string[] = []
-
-    let textarea : HTMLTextAreaElement;
+    let noteArea : HTMLTextAreaElement;
     let nameInput : HTMLInputElement;
-    let tagnames : string;
+    let tagsStr : string;
     let tagDashError : boolean = false;
     
     const textareaAutoResize = () : void => {
-        textarea.style.height = 'auto'
-        textarea.style.height = (textarea.scrollHeight) + 'px'
+        noteArea.style.height = 'auto'
+        noteArea.style.height = (noteArea.scrollHeight) + 'px'
     }
 
     const handleNameChange = () : void => {
@@ -26,7 +25,7 @@
 
     const handleInput = () : void => {
         textareaAutoResize()
-        notes.changeText(noteid, textarea.value)
+        notes.changeText(noteid, noteArea.value)
     }
 
     const handleTextareaKeydown = (e : KeyboardEvent) : void => {
@@ -37,15 +36,15 @@
 
         if (e.key === 'z' && e.ctrlKey) {
             note.text = noteStates.pop() || note.text
-            notes.changeText(noteid, textarea.value)
+            notes.changeText(noteid, noteArea.value)
             textareaAutoResize()
         }
     }
 
-    const handleTagAdd = () : void => {
-        if (!tagnames) return
-        tagnames = trimm(tagnames)
-        let tags = tagnames.split(/ +/)
+    const handleTagsAdd = () : void => {
+        if (!tagsStr) return
+        tagsStr = trimm(tagsStr)
+        let tags = tagsStr.split(/ +/)
         if (tags.some(tag => tag.match(/^-/))) {
             tagDashError = true
             return
@@ -56,25 +55,25 @@
         })
         note.tags = notes.get(noteid).tags
         tagDashError = false
-        tagnames = ''
+        tagsStr = ''
     }
     
-    const handleTagRemove = () : void => {
-        if (!tagnames) return
-        tagnames = trimm(tagnames)
-        let tags = tagnames.split(/ +/)
+    const handleTagsRemove = () : void => {
+        if (!tagsStr) return
+        tagsStr = trimm(tagsStr)
+        let tags = tagsStr.split(/ +/)
         tags.map(tag => {
             notes.removeTag(noteid, tag)
         })
         note.tags = notes.get(noteid).tags
         tagDashError = false
-        tagnames = ''
+        tagsStr = ''
     }
     
     const handleEscape = (e : KeyboardEvent) : void => {
         if (e.key === 'Escape') {
-            if (textarea === document.activeElement) {
-                textarea.blur()
+            if (noteArea === document.activeElement) {
+                noteArea.blur()
                 return
             }
             window.location.replace('/#/')
@@ -83,7 +82,6 @@
 
     onMount(() => {
         textareaAutoResize()
-
         window.addEventListener('keydown', handleEscape)
         
         return () => window.removeEventListener('keydown', handleEscape)
@@ -102,13 +100,20 @@
                 {#if tagDashError}
                     <p style='color: red'>Tagname shouldn't start with dash</p>
                 {/if}
-                <input placeholder='Tag' bind:value={tagnames} />
-                <button on:click|preventDefault={handleTagAdd} class='btn'>add</button>
-                <button on:click|preventDefault={handleTagRemove} class='btn'>remove</button>
+                <input placeholder='Tag' bind:value={tagsStr} />
+                <button on:click|preventDefault={handleTagsAdd} class='btn'>add</button>
+                <button on:click|preventDefault={handleTagsRemove} class='btn'>remove</button>
             </form>
         </div>
         <hr />
-        <textarea class='text' spellcheck={false} rows=1 on:keydown={handleTextareaKeydown} on:input={handleInput} bind:this={textarea} bind:value={note.text} />
+        <textarea
+            class='text'
+            spellcheck={false} rows=1
+            on:keydown={handleTextareaKeydown}
+            on:input={handleInput}
+            bind:this={noteArea}
+            bind:value={note.text}
+        />
         <span class='muted'>{note.tags.join('; ')}</span>
     </div>
 </div>

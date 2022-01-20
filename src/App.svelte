@@ -3,7 +3,6 @@
     // DONE: Note editing
     // DONE: Implement tag system
 
-    // TODO: Refactor code and make it prettier
     // TODO: Markdown styling inside the notes
     //       ** <b>; __ <i>; ~~ <linethrough>; # headers; ===== line; [text](href) <a>;   
     // TODO: More styling
@@ -11,7 +10,7 @@
         // TODO: Make site more adaptive
         // TODO: Add icons
         // TODO: Don't forget title favicon!
-    // TODO: Animations 
+    // TODO: Animations
 
     import Router from 'svelte-spa-router'
     import Note from './components/Note.svelte'

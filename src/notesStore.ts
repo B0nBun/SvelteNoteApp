@@ -7,7 +7,6 @@ const setLSNotes = (notes : INote[]) : void => localStorage.setItem('notes', JSO
 const getLSNotes = () : INote[] => JSON.parse(localStorage.getItem('notes'))
 
 function createNotesStore() {
-    // TODO: Remove this test note, when the development is finished
     if (!getLSNotes()) setLSNotes([{
         id: "test",
         text: "This is a test note",

@@ -5,7 +5,6 @@
     export let text : string = ''
     export let id : string
     export let tags : string[] = []
-    // export let tags : string[] = []    
 
     const handleRemove = (e : MouseEvent) => notes.remove(id)
 </script>
