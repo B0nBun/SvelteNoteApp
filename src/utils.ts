@@ -2,6 +2,8 @@ import type { IMarkdownSyntax } from './Interfaces';
 
 export const trimm = (str : string) : string => str.replace(/^ +/, '').replace(/ +$/, '')
 
+export const insertString = (str : string, pos : number, ins : string)=> str.slice(0, pos) + ins + str.slice(pos)
+
 export const parseTextToMarkdown = (text: string) : string => {
     let syntax : IMarkdownSyntax[] = [
         {
@@ -39,14 +41,8 @@ export const parseTextToMarkdown = (text: string) : string => {
             end: '(\\n|$)',
             class: 'header3'
         },
-        // {
-        //     start: ':',
-        //     end: ':',
-        //     class: 'muted',
-        // }
     ]
 
-    console.log(JSON.stringify(text))
     syntax.forEach(elem => {
         text = text.replace(RegExp(`${elem.start}.+?${elem.end}`, 'g'), (part:string) : string => {
             if (['header1', 'header2', 'header3'].includes(elem.class)) {
@@ -56,7 +52,6 @@ export const parseTextToMarkdown = (text: string) : string => {
             return `<span class='${elem.class}'>` + part + `</span>`
         })
     })
-    console.log(JSON.stringify(text))
     return text
 }
 

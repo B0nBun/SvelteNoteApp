@@ -1,7 +1,7 @@
 <script lang='ts'>
     import type { INote } from '../Interfaces'
-    import { onMount } from "svelte/internal";
-    import { parseTextToMarkdown, sanitize, trimm } from "../utils";
+    import { tick, onMount, beforeUpdate } from "svelte/internal";
+    import { parseTextToMarkdown, sanitize, trimm, insertString } from "../utils";
     import notes from "../notesStore";
 
     export let params : {noteid: string};
@@ -13,6 +13,7 @@
     let nameInput : HTMLInputElement;
     let tagsStr : string;
     let tagDashError : boolean = false;
+    let undoTimer : ReturnType<typeof setTimeout> = null;
     
     const textareaAutoResize = () : void => {
         noteArea.style.height = 'auto'
@@ -24,21 +25,36 @@
     }
 
     const handleInput = () : void => {
-        textareaAutoResize()
+        // Ssaves note state if the last change was made 200ms ago
+        clearTimeout(undoTimer)
+        let prevState = noteArea.value
+        undoTimer = setTimeout(() => {
+            noteStates.push(prevState)
+        }, 200)
+
         notes.changeText(noteid, noteArea.value)
-        // console.log(parseTextToMarkdown(sanitize(note.text)))
+        textareaAutoResize()
     }
 
-    const handleTextareaKeydown = (e : KeyboardEvent) : void => {
+    const handleTextareaKeydown = async (e : KeyboardEvent) : Promise<void> => {
         // TODO: Should think about how to implement Ctrl+Z in a better way
         // TODO: Also fix the jumping to end cursor
-        if (['Enter', 'Escape', ' ', 'Tab'].includes(e.key)) {
-            noteStates.push(note.text)
+        if ('"\'`*:_'.split('').includes(e.key)) {
+            const selectionStart : number = noteArea.selectionStart
+            const selectionEnd : number = noteArea.selectionEnd
+            if (selectionStart === selectionEnd) return
+            e.preventDefault()
+            note.text = insertString(note.text, selectionStart, e.key)
+            note.text = insertString(note.text, selectionEnd+1, e.key)
+            await tick()
+            noteArea.setSelectionRange(selectionStart, selectionEnd + 2)
         }
 
         if (e.key === 'z' && e.ctrlKey) {
+            e.preventDefault()
+            if (note.text === noteStates[noteStates.length - 1]) noteStates.pop()
             note.text = noteStates.pop() || note.text
-            notes.changeText(noteid, noteArea.value)
+            notes.changeText(noteid, note.text)
             textareaAutoResize()
         }
     }
