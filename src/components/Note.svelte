@@ -10,14 +10,15 @@
     let note : INote = notes.get(noteid)
     let noteStates : string[] = []
     let noteArea : HTMLTextAreaElement;
+    let markdownArea : HTMLElement;
     let nameInput : HTMLInputElement;
     let tagsStr : string;
     let tagDashError : boolean = false;
     let undoTimer : ReturnType<typeof setTimeout> = null;
     
     const textareaAutoResize = () : void => {
-        noteArea.style.height = 'auto'
-        noteArea.style.height = (noteArea.scrollHeight) + 'px'
+        // noteArea.style.height = 'auto'
+        // noteArea.style.height = (noteArea.scrollHeight) + 'px'
     }
 
     const handleNameChange = () : void => {
@@ -25,12 +26,14 @@
     }
 
     const handleInput = () : void => {
-        // Ssaves note state if the last change was made 200ms ago
+        // Saves note state if the last change was made 200ms ago
         clearTimeout(undoTimer)
         let prevState = noteArea.value
         undoTimer = setTimeout(() => {
             noteStates.push(prevState)
-        }, 200)
+            noteStates = noteStates.slice(-10) // Only last 10 changes are saved
+            console.log(noteStates)
+        }, 350)
 
         notes.changeText(noteid, noteArea.value)
         textareaAutoResize()
@@ -100,7 +103,11 @@
 
     onMount(() => {
         textareaAutoResize()
+        noteStates.push(note.text)
         window.addEventListener('keydown', handleEscape)
+        markdownArea.addEventListener('click', () => {
+            noteArea.focus()
+        })
         
         return () => window.removeEventListener('keydown', handleEscape)
     })
@@ -125,14 +132,14 @@
         </div>
         <hr />
         <textarea
-            class='text'
+            style="max-height: 0;"
             spellcheck={false} rows=1
             on:keydown={handleTextareaKeydown}
             on:input={handleInput}
             bind:this={noteArea}
             bind:value={note.text}
         />
-        <pre class='text'>
+        <pre class='text' bind:this={markdownArea}>
             {@html parseTextToMarkdown(sanitize(note.text))}
         </pre>
         <span class='muted'>{note.tags.join('; ')}</span>
@@ -186,12 +193,18 @@
     hr {
         margin-bottom: 1rem;
     }
+    
+    textarea {
+        padding: 0;
+        resize: none;
+        opacity: 0;
+    }
 
     .text {
-        resize: none;
         overflow-y: hidden;
         font-size: 1.2rem;
         border: 1px solid #aaa;
+        padding: .5em;
         outline: none;
 
         &:focus {
