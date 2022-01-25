@@ -4,8 +4,6 @@
     // DONE: Implement tag system
 
     // TODO: Markdown styling inside the notes
-        // TODO: Merge textarea and styled markdown text
-        // TODO: Add cursor to merged area
         // TODO: Highlighting
     // TODO: More styling
         // TODO: Colors and general styling can be taken from Svelte
