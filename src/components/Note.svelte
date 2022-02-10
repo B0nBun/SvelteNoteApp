@@ -14,8 +14,10 @@
     let tagsStr : string;
     let tagDashError : boolean = false;
     let undoTimer : ReturnType<typeof setTimeout> = null;
+    let isMarkdownPage : boolean = false;
     
-    const textareaAutoResize = () : void => {
+    const textareaAutoResize = async () : Promise<void> => {
+        await tick()
         noteArea.style.height = 'auto'
         noteArea.style.height = (noteArea.scrollHeight) + 'px'
     }
@@ -25,7 +27,7 @@
     }
 
     const handleInput = () : void => {
-        // Ssaves note state if the last change was made 200ms ago
+        // Saves note state if the last change was made 200ms ago
         clearTimeout(undoTimer)
         let prevState = noteArea.value
         undoTimer = setTimeout(() => {
@@ -124,6 +126,15 @@
             </form>
         </div>
         <hr />
+        <div class="page-select">
+            <button on:click="{() => {isMarkdownPage = false; textareaAutoResize()}}">Edit</button>
+            <button on:click="{() => isMarkdownPage = true}">Markdown</button>
+        </div>
+        {#if isMarkdownPage}
+        <pre class='text'>
+            {@html parseTextToMarkdown(sanitize(note.text))}
+        </pre>
+        {:else}
         <textarea
             class='text'
             spellcheck={false} rows=1
@@ -132,9 +143,7 @@
             bind:this={noteArea}
             bind:value={note.text}
         />
-        <pre class='text'>
-            {@html parseTextToMarkdown(sanitize(note.text))}
-        </pre>
+        {/if}
         <span class='muted'>{note.tags.join('; ')}</span>
     </div>
 </div>
@@ -196,6 +205,23 @@
 
         &:focus {
             outline: 2px solid beige;
+        }
+    }
+
+    .page-select {
+        display: flex;
+        gap: 0;
+        border: 1px solid #4f4f4f;
+        border-bottom: none;
+        border-radius: .4rem .4rem 0 0;
+        width: min-content;
+        overflow: hidden;
+        background-color: #4f4f4f;
+        gap: 1px;
+
+        button {
+            border:none;
+            border-radius: 0;
         }
     }
 </style>

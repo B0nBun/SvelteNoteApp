@@ -43,7 +43,6 @@ export const parseTextToMarkdown = (text: string) : string => {
         },
     ]
 
-    console.log(text)
     syntax.forEach(elem => {
         text = text.replace(RegExp(`${elem.start}.+?${elem.end}`, 'g'), (part:string) : string => {
             if (elem.class === 'bold') {
