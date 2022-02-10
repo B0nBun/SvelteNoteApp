@@ -27,29 +27,33 @@ export const parseTextToMarkdown = (text: string) : string => {
             class: 'monospace'
         },
         {
-            start: '\\n# ',
-            end: '(\\n|$)',
-            class: 'header1'
+            start: '###',
+            end: '###',
+            class: 'header3'
         },
         {
-            start: '\\n## ',
-            end: '(\\n|$)',
+            start: '##',
+            end: '##',
             class: 'header2'
         },
         {
-            start: '\\n### ',
-            end: '(\\n|$)',
-            class: 'header3'
+            start: '#',
+            end: '#',
+            class: 'header1'
         },
     ]
 
+    console.log(text)
     syntax.forEach(elem => {
         text = text.replace(RegExp(`${elem.start}.+?${elem.end}`, 'g'), (part:string) : string => {
-            if (['header1', 'header2', 'header3'].includes(elem.class)) {
-                let newlinescount = (part.match(/\n/g) || []).length
-                return `\n<span class='${elem.class}'>` + part.substring(1).replace(/\n/, '') + `</span>` + (newlinescount ? '\n' : '')
+            if (elem.class === 'bold') {
+                return `<span class='${elem.class}'>` +
+                        part.substring(elem.start.length-1, part.length - elem.start.length+1) +
+                        `</span>`
             }
-            return `<span class='${elem.class}'>` + part + `</span>`
+            return `<span class='${elem.class}'>` +
+                    part.substring(elem.start.length, part.length - elem.start.length) +
+                    `</span>`
         })
     })
     return text
