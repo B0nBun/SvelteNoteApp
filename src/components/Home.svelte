@@ -55,22 +55,22 @@
     <div class='header'>
         <h1>My Notes</h1>
         <form>
-            <input type="text" bind:value={filterStr}/>
-            <button on:click|preventDefault={filterOut}>filter</button>
+            <input class='with-shadow inpt' type="text" bind:value={filterStr}/>
+            <button class='with-shadow btn' on:click|preventDefault={filterOut}>filter</button>
         </form>
     </div>
-    <form>
+    <div class="body">
         <form>
-            <input placeholder="Name" bind:value={addName}/>
+            <input class='inpt' placeholder="Name" bind:value={addName}/>
             <button class='btn' on:click|preventDefault={handleAdd}>Add</button>
         </form>
-    </form>
-    <div class="notes">
-        {#each filteredNotes as note}
-            <MiniNote {...note}/>
-        {:else}
-            <h2>No notes...</h2>
-        {/each}
+        <div class="notes">
+            {#each filteredNotes as note}
+                <MiniNote {...note}/>
+            {:else}
+                <h2>No notes...</h2>
+            {/each}
+        </div>
     </div>
 </div>
 
@@ -79,10 +79,16 @@
         padding: 1em;
         border-radius: 0 0 1rem 1rem;
         margin-bottom: .5em;
-        background-color: plum;
+        background-color: var(--primary);
         color: white;
         display: flex;
         justify-content: space-between;
+    }
+
+    .body {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
 
     .notes {

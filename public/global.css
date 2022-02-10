@@ -9,24 +9,10 @@ html, body {
 }
 
 body {
-	color: #333;
 	margin: 0;
 	box-sizing: content-box;
 	min-height: 100vh;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-}
-
-a {
-	color: rgb(0,100,200);
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-
-a:visited {
-	color: rgb(0,80,160);
 }
 
 label {
@@ -66,6 +52,17 @@ button:focus {
 	border-color: #666;
 }
 
+:root {
+	--primary:  #FF3E00;
+	--secondary:#40B3FF;
+	--elevated0:#f6f0f6;
+	--elevated1:#c6c0c6;
+	--elevated2:#72787F;
+	--elevated3:#5F676F;
+	--elevated4:#4A4A55;
+	--elevated5:#333333;
+}
+
 * {
 	margin: 0;
 	padding: 0;
@@ -78,18 +75,35 @@ button:focus {
 }
 
 .muted {
-	font-size: .8rem;
 	opacity: .7;
 }
 
+.with-shadow {
+	box-shadow: 0 3px 7px -3px black;
+}
+
 .btn {
-	display: flex;
+	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	background-color: #eee;
-	border: 1px solid #aaa;
+	background-color: var(--elevated0);
+	color: var(--elevated4);
 	border-radius: .5rem;
-	margin: 0;
+	margin: 0;	
+}
+
+.btn:hover, .btn:focus {
+	background-color: var(--elevated1);
+	color: var(--elevated5)
+}
+
+.inpt {
+	border-radius: .5rem;
+	color: var(--elevated5);
+}
+
+.inpt:focus {
+	outline: 2px solid var(--secondary);
 }
 
 .bold {

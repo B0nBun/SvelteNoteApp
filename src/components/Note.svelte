@@ -1,6 +1,6 @@
 <script lang='ts'>
     import type { INote } from '../Interfaces'
-    import { tick, onMount, beforeUpdate } from "svelte/internal";
+    import { tick, onMount } from "svelte/internal";
     import { parseTextToMarkdown, sanitize, trimm, insertString } from "../utils";
     import notes from "../notesStore";
 
@@ -78,16 +78,9 @@
         tagsStr = ''
     }
     
-    const handleTagsRemove = () : void => {
-        if (!tagsStr) return
-        tagsStr = trimm(tagsStr)
-        let tags = tagsStr.split(/ +/)
-        tags.map(tag => {
-            notes.removeTag(noteid, tag)
-        })
+    const handleTagsRemove = (tag : string) : void => {
+        notes.removeTag(noteid, tag)
         note.tags = notes.get(noteid).tags
-        tagDashError = false
-        tagsStr = ''
     }
     
     const handleEscape = (e : KeyboardEvent) : void => {
@@ -115,36 +108,41 @@
 <div class='wrapper'>
     <div class="note">
         <div class="header">
-            <input class='name' bind:this={nameInput} on:input={handleNameChange} value={note.name}/>
+            <div class="name-box">
+                <input class='name inpt' bind:this={nameInput} on:input={handleNameChange} value={note.name}/>
+            </div>
             <form class='tag-box'>
                 {#if tagDashError}
                     <p style='color: red'>Tagname shouldn't start with dash</p>
                 {/if}
-                <input placeholder='Tag' bind:value={tagsStr} />
-                <button on:click|preventDefault={handleTagsAdd} class='btn'>add</button>
-                <button on:click|preventDefault={handleTagsRemove} class='btn'>remove</button>
+                <input class='inpt' placeholder='Tag' bind:value={tagsStr} />
+                <button class='btn' on:click|preventDefault={handleTagsAdd}>add</button>
             </form>
         </div>
         <hr />
         <div class="page-select">
-            <button on:click="{() => {isMarkdownPage = false; textareaAutoResize()}}">Edit</button>
-            <button on:click="{() => isMarkdownPage = true}">Markdown</button>
+            <button class='page-select-edit' class:active={!isMarkdownPage} on:click="{() => {isMarkdownPage = false; textareaAutoResize()}}">Edit</button>
+            <button class='page-select-markdown' class:active={isMarkdownPage} on:click="{() => isMarkdownPage = true}">Markdown</button>
         </div>
         {#if isMarkdownPage}
-        <pre class='text'>
-            {@html parseTextToMarkdown(sanitize(note.text))}
-        </pre>
+            <pre class='markdown-text'>
+                {@html parseTextToMarkdown(sanitize(note.text))}
+            </pre>
         {:else}
-        <textarea
-            class='text'
-            spellcheck={false} rows=1
-            on:keydown={handleTextareaKeydown}
-            on:input={handleInput}
-            bind:this={noteArea}
-            bind:value={note.text}
-        />
+            <textarea
+                class='textarea'
+                spellcheck={false} rows=1
+                on:keydown={handleTextareaKeydown}
+                on:input={handleInput}
+                bind:this={noteArea}
+                bind:value={note.text}
+            />
         {/if}
-        <span class='muted'>{note.tags.join('; ')}</span>
+        <div>
+            {#each note.tags as tag}
+                <span class="tag" on:click="{() => handleTagsRemove(tag)}">{tag}; </span>
+            {/each}
+        </div>
     </div>
 </div>
 
@@ -171,14 +169,21 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        margin-bottom: 1rem;
     }
-
+    
+    .name-box {
+        display: flex;
+        justify-content: center;
+    }
+    
     .name {
         font-size: 1.5rem;
         font-weight: bold;
         border: 1px solid transparent;
         border-radius: .2rem;
         outline: none;
+        height: min-content;
 
         &:focus {
             border: 1px solid #aaa;
@@ -188,20 +193,37 @@
 
     .tag-box {
         display: flex;
-        gap: 1rem;
+        gap: .5rem;
         flex-wrap: wrap;
+        justify-content: center;
+        * {
+            height: min-content;
+        }
+    }
+
+    .tag {
+        cursor: pointer;
+        opacity: .7;
+        &:hover {
+            opacity: .85;
+            text-decoration: underline;
+        }
     }
 
     hr {
         margin-bottom: 1rem;
     }
 
-    .text {
-        resize: none;
-        overflow-y: hidden;
+    .textarea, .markdown-text {
         font-size: 1.2rem;
         border: 1px solid #aaa;
         outline: none;
+        min-height: 5em;
+    }
+    
+    .textarea {
+        resize: none;
+        overflow-y: hidden;
 
         &:focus {
             outline: 2px solid beige;
@@ -211,17 +233,26 @@
     .page-select {
         display: flex;
         gap: 0;
-        border: 1px solid #4f4f4f;
-        border-bottom: none;
-        border-radius: .4rem .4rem 0 0;
         width: min-content;
-        overflow: hidden;
         background-color: #4f4f4f;
-        gap: 1px;
-
+        border-radius: .5rem .5rem 0 0;
+        
         button {
-            border:none;
+            border-bottom: none;
             border-radius: 0;
         }
+
+        .page-select-edit {
+            border-radius: .5rem 0 0 0;   
+        }
+        
+        .page-select-markdown {
+            border-radius: 0 .5rem 0 0;   
+        }
+    }
+
+    .active {
+        background-color: var(--secondary);
+        color: white;
     }
 </style>
