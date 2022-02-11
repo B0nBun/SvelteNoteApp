@@ -35,6 +35,12 @@
         transition: transform ease-out .2s;
     }
 
+    @media (max-width: 25rem) {
+        .note {
+            grid-column: span 4;
+        }
+    }
+
     .note:hover, .note:focus {
         transform: scale(1.05);
     }

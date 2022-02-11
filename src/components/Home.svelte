@@ -97,4 +97,44 @@
         grid-gap: 1.5em;
         justify-content: space-between;
     }   
+
+    @media (max-width: 40rem) {
+        .header h1 {
+            display: none;
+        }
+    }
+
+    @media (max-width: 25rem) {
+        .header {
+            form {
+                display: flex;
+                flex-direction: column;
+                gap: .2rem;
+                width: 100%;
+
+                button {
+                    font-size: .9em;
+                    padding: .2rem;    
+                }
+            }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .body {
+            align-items: center;
+            form {
+                display: flex;
+                flex-direction: column;
+                gap: .2rem;
+                width: 100%;
+
+                button {
+                    font-size: .9em;
+                    padding: .2rem;    
+                }
+            }
+        }
+    }
 </style>

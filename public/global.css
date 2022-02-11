@@ -131,3 +131,9 @@ button:focus {
 .header3 {
 	font-size: 1.15em;
 }
+
+@media (max-width: 25rem) {
+	:root {
+		font-size: 14px;
+	}
+}
