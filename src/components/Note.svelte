@@ -38,7 +38,7 @@
         textareaAutoResize()
     }
 
-    const handleTextareaKeydown = async (e : KeyboardEvent) : Promise<void> => {
+    /*const handleTextareaKeydown = async (e : KeyboardEvent) : Promise<void> => {
         // TODO: Should think about how to implement Ctrl+Z in a better way
         // TODO: Also fix the jumping to end cursor
         if ('"\'`*:_'.split('').includes(e.key)) {
@@ -59,7 +59,7 @@
             notes.changeText(noteid, note.text)
             textareaAutoResize()
         }
-    }
+    }*/
 
     const handleTagsAdd = () : void => {
         if (!tagsStr) return
@@ -134,7 +134,7 @@
             <textarea
                 class='textarea'
                 spellcheck={false} rows=1
-                on:keydown={handleTextareaKeydown}
+                on:keydown={/*handleTextareaKeydown*/() => {}}
                 on:input={handleInput}
                 bind:this={noteArea}
                 bind:value={note.text}
