@@ -136,4 +136,8 @@ button:focus {
 	:root {
 		font-size: 14px;
 	}
+
+	.wrapper {
+		padding: 0 .5rem;
+	}
 }

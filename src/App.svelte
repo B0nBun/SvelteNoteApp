@@ -4,7 +4,6 @@
     // DONE: Implement tag system
 
     // TODO: More styling
-        // TODO: Make site more adaptive
         // TODO: Add icons
         // TODO: Don't forget title favicon!
     // TODO: Animations

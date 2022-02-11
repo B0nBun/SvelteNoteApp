@@ -170,20 +170,20 @@
     .header {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
         margin-bottom: 1rem;
     }
     
     .name-box {
+        flex: 1;
         display: flex;
         justify-content: center;
     }
     
     .name {
+        width: 100%;
         font-size: 1.5rem;
         font-weight: bold;
         border: 1px solid transparent;
-        border-radius: .2rem;
         outline: none;
         height: min-content;
 
@@ -194,9 +194,11 @@
     }
 
     .tag-box {
+        flex: 1;
         display: flex;
         gap: .5rem;
         flex-wrap: wrap;
+        width: 100%;
         justify-content: center;
         * {
             height: min-content;
@@ -257,5 +259,44 @@
     .active {
         background-color: var(--secondary);
         color: white;
+    }
+
+    @media (max-width: 45rem) {
+        .header {
+            flex-direction: column;
+            gap: .5rem;
+            .tag-box {
+                justify-content: flex-start;
+            }
+        }
+    }
+
+    @media (max-width: 25rem) {
+        .note {
+            padding: .5rem;
+        }
+        
+        .header {
+            .name {
+                text-align: center;
+                overflow: scroll;
+            }
+            .tag-box {
+                flex-direction: column;
+                button {
+                    font-size: .9em;
+                }
+                * {
+                    width: 100%;
+                }
+            }
+        }
+
+        .page-select {
+            width: 100%;
+            * {
+                flex: 1;
+            }
+        }
     }
 </style>
