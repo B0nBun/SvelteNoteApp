@@ -25,7 +25,7 @@ function createNotesStore() {
         }
 
         if (!name) {
-            note.name = `Note ${note.id}`
+            note.name = `Note`
         }
 
         update(notes => {

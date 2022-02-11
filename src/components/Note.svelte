@@ -97,7 +97,9 @@
         textareaAutoResize()
         window.addEventListener('keydown', handleEscape)
         
-        return () => window.removeEventListener('keydown', handleEscape)
+        return () => {
+            window.removeEventListener('keydown', handleEscape)
+        }
     })
 </script>
 
@@ -215,6 +217,7 @@
     }
 
     .textarea, .markdown-text {
+        padding: .3rem;
         font-size: 1.2rem;
         border: 1px solid #aaa;
         outline: none;

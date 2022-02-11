@@ -31,12 +31,7 @@
         gap: .5rem;
         cursor: pointer;
 
-        &:nth-child(12n+1),
-        &:nth-child(12n+6),
-        &:nth-child(12n+7),
-        &:nth-child(12n) {
-            grid-column: span 2;
-        }
+        grid-column: span 2;
         transition: transform ease-out .2s;
     }
 
