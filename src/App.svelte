@@ -3,8 +3,6 @@
     // DONE: Note editing
     // DONE: Implement tag system
 
-    // TODO: Animations
-
     import Router from 'svelte-spa-router'
     import Note from './components/Note.svelte'
     import Home from './components/Home.svelte'

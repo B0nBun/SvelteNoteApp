@@ -1,5 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { fade } from 'svelte/transition'
+    import { flip } from 'svelte/animate'
     import type { INote } from "../Interfaces";
     import notes from "../notesStore";
     import MiniNote from './MiniNote.svelte'
@@ -65,8 +67,17 @@
             <button class='btn' on:click|preventDefault={handleAdd}>Add</button>
         </form>
         <div class="notes">
-            {#each filteredNotes as note}
-                <MiniNote {...note}/>
+            {#each filteredNotes as note (note.id)}
+                <div
+                    in:fade="{{duration: 200}}"
+                    out:fade|local="{{duration: 200}}"
+                    animate:flip="{{duration: 400}}"
+                    class="mininote-wrapper"
+                >
+                    <MiniNote
+                        {...note}
+                    />
+                </div>
             {:else}
                 <h2>No notes...</h2>
             {/each}
@@ -96,7 +107,13 @@
         grid-template-columns: repeat(4, 1fr);
         grid-gap: 1.5em;
         justify-content: space-between;
-    }   
+    }  
+
+    .mininote-wrapper {
+        grid-column: span 2;
+        transition-duration: 100ms;
+        background-color: #ffffff;
+    }
 
     @media (max-width: 40rem) {
         .header h1 {

@@ -1,5 +1,6 @@
 <script lang='ts'>
     import notes from '../notesStore'
+    import { fade } from 'svelte/transition'
 
     export let name : string = ''
     export let text : string = ''
@@ -42,7 +43,6 @@
         gap: .5rem;
         cursor: pointer;
 
-        grid-column: span 2;
         transition: transform ease-out .2s;
     }
 
