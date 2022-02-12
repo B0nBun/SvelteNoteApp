@@ -3,9 +3,6 @@
     // DONE: Note editing
     // DONE: Implement tag system
 
-    // TODO: More styling
-        // TODO: Add icons
-        // TODO: Don't forget title favicon!
     // TODO: Animations
 
     import Router from 'svelte-spa-router'

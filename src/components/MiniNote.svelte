@@ -7,13 +7,24 @@
     export let tags : string[] = []
 
     const handleRemove = (e : MouseEvent) => notes.remove(id)
+    const handleKeyDownRemove = (e : KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            e.preventDefault()
+            notes.remove(id)
+        }
+    }
 </script>
 
 <a tabindex="0" href={`/#/${id}`} class='note'>
     <h3 class='name'>{name}</h3>
     <p class='text'>{text}</p>
     <p class='muted tags'>tags: {tags.join(' ')}</p>
-    <p tabindex="0" on:click|stopPropagation|preventDefault={handleRemove} class='remove-note muted'>Remove</p>
+    <p
+        tabindex="0"
+        on:click|stopPropagation|preventDefault={handleRemove}
+        on:keydown|stopPropagation={handleKeyDownRemove}
+        class='remove-note muted'
+    >Remove</p>
 </a>
 
 <style lang='scss'>
